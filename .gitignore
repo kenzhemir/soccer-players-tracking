@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 .vscode
 yolov2.weights
+=======
+>>>>>>> 9bd73c41aa5e565cf174c320f6a368eec6822938
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
