@@ -37,6 +37,9 @@ vk.vkgit         self.io = io
 
     def controller(self, data):
         image = base64.b64decode(data)
+        image = np.frombuffer(image, dtype=np.uint8)
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        print(image.shape)
         self.incrementFrame()
         if self.detect:
             boxes = self.detector.detect(image)
@@ -188,7 +191,4 @@ if __name__ == '__main__':
     io = SocketInputOutput(host, port)
     detector = YoloDetector()
     tracker = OpenCVTracker()
-    cv2.namedWindow("original")
     ObjectRecognitionBlackbox(io, detector, tracker, detection_frequency).run()
-
-cv2.destroyAllWindows()
