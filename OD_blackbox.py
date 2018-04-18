@@ -1,14 +1,14 @@
 # Imports
 import os, sys
 
+import cv2
+from socketIO_client import SocketIO
 cd = os.path.dirname(os.path.abspath(__file__))
 os.chdir(cd)
 
 sys.path.insert(0, os.path.join(cd, 'libs'))
 
 from darkflow.net.build import TFNet
-import cv2
-from socketIO_client import SocketIO
 
 # Server parameters
 host = 'localhost'
