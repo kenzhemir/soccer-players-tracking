@@ -69,7 +69,6 @@ dependencies:
   - zlib=1.2.11=ha838bed_2
   - pip:
     - chardet==3.0.4
-    - darkflow==1.0.0
     - idna==2.6
     - requests==2.18.4
     - socketio-client==0.7.2
