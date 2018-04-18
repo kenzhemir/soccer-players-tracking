@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.join(cd, 'libs'))
 from darkflow.net.build import TFNet
 
 # Server parameters
-host = 'localhost'
+host = '10.1.60.76'
 port = 5000
 
 # Detection and tracking parameters
@@ -21,7 +21,7 @@ detection_frequency = 30  # Detects every 30 frames
 
 class ObjectRecognitionBlackbox:
     def __init__(self, io, detector, tracker, detection_frequency):
-        self.io = io
+vk.vkgit         self.io = io
         self.detector = detector
         self.tracker = tracker
         self.frame_counter = 0
@@ -185,7 +185,7 @@ class OpenCVTracker:
 print(__name__)
 if __name__ == '__main__':
     # io = SocketInputOutput(host, port)
-    io = SocketInputOutput('127.0.0.1', '5000')
+    io = SocketInputOutput(host, port)
     detector = YoloDetector()
     tracker = OpenCVTracker()
     cv2.namedWindow("original")
