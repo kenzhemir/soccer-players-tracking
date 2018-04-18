@@ -162,7 +162,6 @@ if __name__ == '__main__':
     io = FileInputOutput("test1.mp4")
     detector = YoloDetector()
     tracker = OpenCVTracker()
-    cv2.namedWindow("original")
     ObjectRecognitionBlackbox(io, detector, tracker, detection_frequency).run()
 
 cv2.destroyAllWindows()
