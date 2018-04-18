@@ -1,6 +1,7 @@
 # Imports
 import os, sys
-
+import base64
+import numpy as np
 import cv2
 from socketIO_client import SocketIO
 cd = os.path.dirname(os.path.abspath(__file__))
@@ -28,21 +29,22 @@ class ObjectRecognitionBlackbox:
         self.detect = True
         self.players_table = []
         self.current_players = []
+        self.id_counter = 0
 
     def incrementFrame(self):
         self.detect = self.frame_counter % self.detection_frequency == 0
         self.frame_counter += 1
 
     def controller(self, data):
+        image = base64.b64decode(data)
         self.incrementFrame()
         if self.detect:
-            # print("Detecting boxes")
-            boxes = self.detector.detect(data)
+            boxes = self.detector.detect(image)
             playersBoxes = self.labelBoxes(boxes)
-            self.tracker.initialize_track(data, playersBoxes)
+            self.tracker.initialize_track(image, playersBoxes)
         else:
             # print("Tracking boxes")
-            ok, screen_players = self.tracker.track(data)
+            ok, screen_players = self.tracker.track(image)
             self.updateCurrentPlayers(screen_players)
         self.io.send(self.current_players)
 
@@ -51,20 +53,44 @@ class ObjectRecognitionBlackbox:
             self.current_players[i]["box"] = screen_players[i]
 
     def labelBoxes(self, boxes):
-        self.current_players = []
         res = []
+        new_players = []
         for box in boxes:
-            id = self.identifyPlayer(box)
             x = box["topleft"]["x"]
             y = box["topleft"]["y"]
             h = box["bottomright"]["y"] - y
             w = box["bottomright"]["x"] - x
-            self.current_players.append(dict({"id": id, "box": (x, y, h, w)}))
+            id = self.identifyPlayer({x, y, h, w})
+            new_players.append(dict({"id": id, "box": (x, y, h, w)}))
             res.append((x, y, h, w))
+        self.current_players = new_players
         return res
 
     def identifyPlayer(self, box):
-        return 1
+        (x, y, h, w) = box
+        areas = []
+        for pl in self.current_players:
+            b = pl["box"]
+            x1 = b[0]
+            y1 = b[1]
+            h1 = b[2]
+            w1 = b[3]
+            left = max(x1, x)
+            right = min(x1 + w1, x + w)
+            top = max(y1, y)
+            bottom = max(y1 + h1, y + h)
+            area = ((right - left) *
+                    (bottom - top)) if right > left and bottom > top else 0
+            areas.append(area / (h * w))
+        if len(areas) > 0:
+            maxind = np.argmax(areas)
+        if len(areas) <= 0 or areas[maxind] < 0.7:
+            id = self.id_counter
+            self.id_counter += 1
+        else:
+            id = self.current_players[maxind]['id']
+            del self.current_players[maxind]
+        return id
 
     def run(self):
         self.io.connect()
@@ -159,7 +185,7 @@ class OpenCVTracker:
 print(__name__)
 if __name__ == '__main__':
     # io = SocketInputOutput(host, port)
-    io = FileInputOutput("test1.mp4")
+    io = SocketInputOutput('127.0.0.1', '5000')
     detector = YoloDetector()
     tracker = OpenCVTracker()
     ObjectRecognitionBlackbox(io, detector, tracker, detection_frequency).run()
