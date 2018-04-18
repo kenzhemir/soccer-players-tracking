@@ -1,6 +1,8 @@
 .vscode
 yolov2.weights
 env
+dev
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
