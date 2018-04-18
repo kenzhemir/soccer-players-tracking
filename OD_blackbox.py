@@ -1,6 +1,6 @@
 # Imports
 import os, sys
-
+import base64
 import numpy as np
 import cv2
 from socketIO_client import SocketIO
@@ -36,14 +36,15 @@ class ObjectRecognitionBlackbox:
         self.frame_counter += 1
 
     def controller(self, data):
+        image = base64.b64decode(data)
         self.incrementFrame()
         if self.detect:
-            boxes = self.detector.detect(data)
+            boxes = self.detector.detect(image)
             playersBoxes = self.labelBoxes(boxes)
-            self.tracker.initialize_track(data, playersBoxes)
+            self.tracker.initialize_track(image, playersBoxes)
         else:
             # print("Tracking boxes")
-            ok, screen_players = self.tracker.track(data)
+            ok, screen_players = self.tracker.track(image)
             self.updateCurrentPlayers(screen_players)
         self.io.send(self.current_players)
 
