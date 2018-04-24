@@ -1,0 +1,3 @@
+[submodule "darkflow"]
+	path = darkflow
+	url = http://github.com/thtrieu/darkflow
