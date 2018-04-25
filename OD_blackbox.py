@@ -21,7 +21,7 @@ detection_frequency = 30  # Detects every 30 frames
 
 class ObjectRecognitionBlackbox:
     def __init__(self, io, detector, tracker, detection_frequency):
-vk.vkgit         self.io = io
+        self.io = io
         self.detector = detector
         self.tracker = tracker
         self.frame_counter = 0
@@ -184,10 +184,7 @@ class OpenCVTracker:
     def track(self, image):
         return self.tracker.update(image)
 
-
-print(__name__)
 if __name__ == '__main__':
-    # io = SocketInputOutput(host, port)
     io = SocketInputOutput(host, port)
     detector = YoloDetector()
     tracker = OpenCVTracker()
