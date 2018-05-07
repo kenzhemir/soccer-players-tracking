@@ -38,3 +38,7 @@ ables
 ```
 python main.py
 ```
+
+## Having trouble with installation?
+
+Write me a message -> miras.kenzhegaliyev@nu.edu.kz

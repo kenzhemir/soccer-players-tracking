@@ -180,10 +180,7 @@ class OpenCVTracker:
     def track(self, image):
         return self.tracker.update(image)
 
-
-print(__name__)
 if __name__ == '__main__':
-    # io = SocketInputOutput(host, port)
     io = SocketInputOutput(host, port)
     detector = YoloDetector()
     tracker = OpenCVTracker()
