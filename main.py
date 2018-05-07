@@ -21,7 +21,7 @@ detection_frequency = 30  # Detects every 30 frames
 
 class ObjectRecognitionBlackbox:
     def __init__(self, io, detector, tracker, detection_frequency):
-vk.vkgit         self.io = io
+        self.io = io
         self.detector = detector
         self.tracker = tracker
         self.frame_counter = 0
@@ -36,10 +36,6 @@ vk.vkgit         self.io = io
         self.frame_counter += 1
 
     def controller(self, data):
-        image = base64.b64decode(data)
-        image = np.frombuffer(image, dtype=np.uint8)
-        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-        print(image.shape)
         self.incrementFrame()
         if self.detect:
             boxes = self.detector.detect(image)
